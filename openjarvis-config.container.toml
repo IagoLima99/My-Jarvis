@@ -1,0 +1,33 @@
+[engine]
+default = "ollama"
+
+[engine.ollama]
+host = "http://host.docker.internal:11434"
+
+[intelligence]
+default_model = "qwen2.5-coder:14b"
+
+[server]
+host = "0.0.0.0"
+port = 8000
+agent = "simple"
+
+[speech]
+# Local-only speech recognition. Docker on Windows has no supported AMD GPU
+# passthrough for this workload, so CPU int8 leaves the RX 9060 XT for Ollama.
+backend = "faster-whisper"
+model = "base"
+device = "cpu"
+compute_type = "int8"
+tts_backend = "kokoro"
+voice_id = "pf_dora"
+voice_speed = 1.0
+
+[telemetry]
+enabled = false
+
+[analytics]
+enabled = false
+
+[traces]
+enabled = false

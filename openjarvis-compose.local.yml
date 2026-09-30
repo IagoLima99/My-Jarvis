@@ -1,0 +1,74 @@
+name: openjarvis_local
+
+services:
+  jarvis:
+    build:
+      context: ${OPENJARVIS_SOURCE_DIR:?Run Start-My-Jarvis.ps1 or set OPENJARVIS_SOURCE_DIR}
+      dockerfile: ${JARVIS_PROJECT_ROOT:?Run Start-My-Jarvis.ps1 or set JARVIS_PROJECT_ROOT}/Dockerfile.openjarvis.speech
+    command:
+      - serve
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --engine
+      - ollama
+      - --model
+      - qwen2.5-coder:14b
+      - --agent
+      - simple
+    expose:
+      - "8000"
+    environment:
+      OPENJARVIS_ENGINE_DEFAULT: ollama
+      OLLAMA_HOST: http://host.docker.internal:11434
+      OPENJARVIS_API_KEY: ${OPENJARVIS_API_KEY:?Set OPENJARVIS_API_KEY in the launching environment}
+      OPENJARVIS_CONFIG: /home/openjarvis/config.toml
+      HF_HOME: /home/openjarvis/.cache/huggingface
+    volumes:
+      - openjarvis-data:/home/openjarvis
+      - type: bind
+        source: ./openjarvis-config.container.toml
+        target: /home/openjarvis/config.toml
+        read_only: true
+    read_only: true
+    tmpfs:
+      # espeakng-loader maps its bundled shared library from /tmp; exec is
+      # required for that local library and remains confined to this container.
+      - /tmp:exec
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+  ui:
+    image: nginx:1.27-alpine
+    depends_on:
+      - jarvis
+    ports:
+      - "127.0.0.1:18443:8080"
+      - "127.0.0.1:18444:8081"
+    environment:
+      OPENJARVIS_API_KEY: ${OPENJARVIS_API_KEY:?Set OPENJARVIS_API_KEY in the launching environment}
+    volumes:
+      - type: bind
+        source: ./openjarvis-nginx.conf.template
+        target: /etc/nginx/templates/default.conf.template
+        read_only: true
+      - type: bind
+        source: ./openjarvis-voice
+        target: /usr/share/nginx/html/voice
+        read_only: true
+    read_only: true
+    tmpfs:
+      - /var/cache/nginx
+      - /var/run
+      - /tmp
+      - /etc/nginx/conf.d
+    security_opt:
+      - no-new-privileges:true
+    restart: unless-stopped
+
+volumes:
+  openjarvis-data:

@@ -1,0 +1,5 @@
+--- a/frontend/src-tauri/src/lib.rs
++++ b/frontend/src-tauri/src/lib.rs
+@@
+-const JARVIS_PORT: u16 = 8000;
++const JARVIS_PORT: u16 = 18443;

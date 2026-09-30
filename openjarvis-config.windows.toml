@@ -1,0 +1,18 @@
+# Optional native Windows/Desktop configuration. The supported one-click path
+# uses Docker and openjarvis-config.container.toml instead.
+[engine]
+default = "ollama"
+
+[engine.ollama]
+host = "http://127.0.0.1:11434"
+
+[intelligence]
+default_model = "qwen2.5-coder:14b"
+
+[server]
+host = "127.0.0.1"
+port = 18443
+agent = "simple"
+
+[telemetry]
+enabled = false

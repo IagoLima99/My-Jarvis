@@ -1,0 +1,14 @@
+# Runtime state and secrets
+.env
+OpenJarvis/
+*.log
+
+# Local staging/backup artifacts
+*.backup-*
+openjarvis-lib.rs
+openjarvis-config.local.toml
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
