@@ -33,4 +33,4 @@ Na primeira abertura, clique em **Iniciar conversa** e permita o microfone. Depo
 
 ## Segurança e dados não versionados
 
-`.env`, modelos, cache Hugging Face, volumes Docker, logs e o clone do OpenJarvis são ignorados. Nenhuma chave ou modelo é enviado ao GitHub. Os containers `backprime` e `rpa-controlcenter` não fazem parte desta composição e não são tocados pelo script.
+`.env`, modelos, cache Hugging Face, volumes Docker, logs e o clone do OpenJarvis são ignorados.
